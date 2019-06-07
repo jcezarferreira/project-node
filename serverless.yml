@@ -1,0 +1,22 @@
+service: desafio-concrete
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  environment:
+    SALT: 10
+    JWT_SECRET: 'concretesecret' 
+    JWT_EXPIRATION_TIME: '1m'
+    MONGO_URL: mongodb://admin-concrete:c0ncr3t3@ds233167.mlab.com:33167/desafio-concrete
+
+plugins:
+  - serverless-offline
+
+functions:
+  app:
+    handler: src/index.server
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'
+
+
