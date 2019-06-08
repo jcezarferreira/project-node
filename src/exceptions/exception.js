@@ -8,7 +8,7 @@ const InvalidCredentials = require('./errors/invalid-credentials');
 const ResourceNotFound = require('./errors/resource-not-found');
 
 const getKnownError = function (error) {
-	if (!error['name'])
+	if (!error || !error['name'])
 		error = { name: 'InternalServerError' };
 
 	const knownErrors =
@@ -19,9 +19,11 @@ const getKnownError = function (error) {
 		'InternalServerError': new InternalServerError(),
 		'AlreadyExists': new AlreadyExists(),
 		'InvalidCredentials': new InvalidCredentials(),
-		'ResourceNotFound': new ResourceNotFound()
+		'ResourceNotFound': new ResourceNotFound(),
+		'Unauthorized': new Unauthorized(),
+		'InvalidSession': new InvalidSession(),
+		'InvalidFields': new InvalidFields(),
 	};
-
 	return knownErrors[error.name] || error;
 };
 

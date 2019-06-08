@@ -9,7 +9,8 @@ module.exports = class InvalidFields extends Error {
 };
 
 const getError = (message) => {
-    for (var errorKey in message.errors);
+    if (message && message.errors)
+        for (var errorKey in message.errors);
 
     if (errorKey)
         return message.errors[errorKey].message;
