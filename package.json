@@ -5,14 +5,21 @@
   "main": "index.js",
   "directories": {
     "test": "tests"
-  },
+  }, 
   "scripts": {
-    "test": "jest"
+    "test": "jest \"test/.*\\.*\\.js\"",
+    "test:report": "jest \"test/.*\\.*\\.js\" --coverage --verbose",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.3",
+    "husky": "^2.4.0",
     "jest": "^24.8.0",
     "serverless-offline": "^5.0.1"
   },
@@ -29,5 +36,11 @@
     "serverless": "^1.44.1",
     "serverless-http": "^2.0.2",
     "uuid": "^3.3.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test && npm run lint",
+      "pre-push": "npm test"
+    }
   }
 }
