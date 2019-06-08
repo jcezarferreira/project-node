@@ -51,25 +51,14 @@ UserSchema.pre('save', async function (next) {
 
     const currentSalt = await bcrypt.genSalt(parseInt(SALT));
 
-    const hash = await bcrypt.hash(this.senha, salt);
+    const hash = await bcrypt.hash(this.senha, currentSalt);
+
+    this.senha = hash;
 
     next();
-    
   } catch (error) {
     return next(error);
   }
-  
-  
-  // bcrypt.genSalt(parseInt(SALT), function (error, salt) {
-  //   if (error) return next(error);
-
-  //   bcrypt.hash($this.senha, salt, function (err, hash) {
-  //     if (err) return next(err);
-
-  //     $this.senha = hash;
-  //     next();
-  //   });
-  // });
 });
 
 UserSchema.methods.comparePassword = function (candidatePassword) {

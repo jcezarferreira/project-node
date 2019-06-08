@@ -3,7 +3,7 @@ const { Strategy } = require('passport-http-bearer');
 const { ExtractJwt } = require('passport-jwt');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const exception = require('../exception');
+const exception = require('../exceptions/exception');
 
 const { JWT_SECRET, JWT_EXPIRATION_TIME } = process.env;
 
@@ -41,7 +41,7 @@ const setPassportStrategy = (passportContext) => {
       if (!decoded) { throw new exception.Unauthorized(); }
       done(null, jwtPayload);
     } catch (error) {
-      done(exception.getKnownError(error), false);
+      done(error, false);
     }
   }));
 };
