@@ -3,12 +3,12 @@
 const mongoose = require('mongoose');
 const validators = require('mongoose-validators');
 const unique = require('mongoose-unique-validator');
-const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const jwtFunctions = require('../jwt/functions');
 
 const { Schema } = mongoose;
 
-const SALT = 10;
+const SALT = 16;
 
 const TelefoneSchema = new Schema({
   numero: {
@@ -36,12 +36,13 @@ const UserSchema = new Schema({
   senha: { type: String, required: [true, '{PATH} é um campo obrigatório'] },
   telefones: [TelefoneSchema],
   ultimo_login: Date,
+  salt: String,
   token: String,
 }, { timestamps: true });
 
 UserSchema.plugin(unique, { message: '{PATH} já existente' });
 
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', function (next) {
   try {
     this.ultimo_login = this.updatedAt;
 
@@ -49,9 +50,9 @@ UserSchema.pre('save', async function (next) {
 
     if (!this.isModified('senha')) return next();
 
-    const currentSalt = await bcrypt.genSalt(SALT);
+    this.salt = crypto.randomBytes(SALT).toString('hex');
 
-    const hash = await bcrypt.hash(this.senha, currentSalt);
+    const hash = crypto.pbkdf2Sync(this.senha, this.salt, 10000, 512, 'sha512').toString('hex');
 
     this.senha = hash;
 
@@ -62,7 +63,8 @@ UserSchema.pre('save', async function (next) {
 });
 
 UserSchema.methods.comparePassword = function (candidatePassword) {
-  return bcrypt.compare(candidatePassword || '', this.senha);
+  const hash = crypto.pbkdf2Sync(candidatePassword || '', this.salt, 10000, 512, 'sha512').toString('hex');
+  return this.senha === hash;
 };
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
