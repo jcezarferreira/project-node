@@ -9,7 +9,10 @@
             "request": "launch",
             "name": "Serverless Offline",
             "program": "${workspaceRoot}/node_modules/serverless/bin/serverless",
-            "args": ["offline", "start"],
+            "args": [
+                "offline",
+                "start"
+            ],
             "cwd": "${workspaceRoot}",
             "preLaunchTask": null,
             "runtimeExecutable": "node",
@@ -17,6 +20,17 @@
                 "--nolazy"
             ],
             "sourceMaps": false
+        },
+        {
+            "name": "Launch via npm",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-start",
+                "debug"
+            ],
         }
     ]
 }

@@ -7,25 +7,32 @@ const AlreadyExists = require('./errors/already-exists');
 const InvalidCredentials = require('./errors/invalid-credentials');
 const ResourceNotFound = require('./errors/resource-not-found');
 
-const getKnownError = function (error) {
-	if (!error || !error['name'])
-		error = { name: 'InternalServerError' };
+const getKnownError = (error) => {
+  let currentError = error;
+  if (!currentError || !currentError.name) { currentError = { name: 'InternalServerError' }; }
 
-	const knownErrors =
-	{
-		'JsonWebTokenError': new Unauthorized(),
-		'TokenExpiredError': new InvalidSession(),
-		'ValidationError': new InvalidFields(error),
-		'InternalServerError': new InternalServerError(),
-		'AlreadyExists': new AlreadyExists(),
-		'InvalidCredentials': new InvalidCredentials(),
-		'ResourceNotFound': new ResourceNotFound(),
-		'Unauthorized': new Unauthorized(),
-		'InvalidSession': new InvalidSession(),
-		'InvalidFields': new InvalidFields(),
-	};
-	return knownErrors[error.name] || error;
+  const knownErrors = {
+    JsonWebTokenError: new Unauthorized(),
+    TokenExpiredError: new InvalidSession(),
+    ValidationError: new InvalidFields(error),
+    InternalServerError: new InternalServerError(),
+    AlreadyExists: new AlreadyExists(),
+    InvalidCredentials: new InvalidCredentials(),
+    ResourceNotFound: new ResourceNotFound(),
+    Unauthorized: new Unauthorized(),
+    InvalidSession: new InvalidSession(),
+    InvalidFields: new InvalidFields(),
+  };
+  return knownErrors[currentError.name] || error;
 };
 
-module.exports = { getKnownError, Unauthorized, InvalidSession, InvalidFields, InternalServerError, AlreadyExists, ResourceNotFound, InvalidCredentials };
-
+module.exports = {
+  getKnownError,
+  Unauthorized,
+  InvalidSession,
+  InvalidFields,
+  InternalServerError,
+  AlreadyExists,
+  ResourceNotFound,
+  InvalidCredentials,
+};

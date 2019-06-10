@@ -1,167 +1,84 @@
-// 'use strict';
 
-// process.env.NODE_ENV = 'test';
+require('jest');
+require('dotenv').config();
+const mockUser = require('../mocks/mock-user');
+const UserSchema = require('../../src/models/user');
+const connection = require('../../src/config/connection');
 
-// const mock = require('../mocks/mock-user');
-// const UserSchema = require('../../src/models/user');
+process.env.NODE_ENV = 'test';
+let conn;
 
-// const chai = require('chai');
+describe('User Schema', () => {
+  beforeAll(async () => {
+    conn = await connection.generate();
+    await UserSchema.deleteMany({});
+  });
 
-// chai.should();
+  afterAll(async () => {
+    await UserSchema.deleteMany({});
+    await conn.close();
+    await conn.db.close();
+  });
 
-// describe('User - Schema validation', () => {
-//     beforeEach(async () => {
-//         await UserSchema.remove({});
-//     });
-    
-//     afterEach(async () => {
-//         await UserSchema.remove({});
-//     });
-//     it('it should be valid user', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.user);
-//                 let validate = await user.validate();
-//                 chai.expect(validate).to.be.an('undefined');
-//                 done();
-//             } catch (error) {
-//                 done(error);
-//             }
-//         })();
-//     });
+  describe('Validation schema', () => {
+    it('it should is valid user', async () => {
+      const user = new UserSchema(mockUser.user);
 
-//     it('it should be an invalid user [invalid field - email]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.userWithInvalidEmail);
-//                 await user.validate();
-//                 done(new Error('Validate UserSchema email is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors.email).to.exist;
-//                 done();
-//             }
-//         })();
-//     });
+      const validate = await user.validate();
 
-//     it('it should be an invalid user [invalid field - telefone.numero]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.userWithInvalidTelefoneNumero);
-//                 await user.validate();
-//                 done(new Error('Validate UserSchema telefone.numero is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors['telefones.0.numero']).to.exist;
-//                 done();
-//             }
-//         })();
-//     });
+      expect(undefined).toEqual(validate);
+    });
 
-//     it('it should be an invalid user [invalid field - telefone ddd]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.userWithInvalidTelefoneDDD);
-//                 await user.validate();
-//                 done(new Error('Validate UserSchema telefone.ddd is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors['telefones.0.ddd']).to.exist;
-//                 done();
-//             }
-//         })();
-//     });
+    it('it should be an invalid user [invalid field - email]', async () => {
+      const user = new UserSchema(mockUser.userWithInvalidEmail);
+      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidEmail.email} não é um email válido`);
+    });
 
-//     it('it should be an invalid user [missing field - email]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.userWithoutEmail);
-//                 await user.validate();
-//                 done(new Error('Validate UserSchema email is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors.email).to.exist;
-//                 done();
-//             }
-//         })();
-//     });
+    it('it should be an invalid user [invalid field - telefone.numero]', async () => {
+      const user = new UserSchema(mockUser.userWithInvalidTelefoneNumero);
+      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidTelefoneNumero.telefones[0].numero} não é um número de telefone válido`);
+    });
 
-//     it('it should be an invalid user [missing field - nome]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.userWithoutNome);
-//                 await user.validate();
-//                 done(new Error('Validate UserSchema nome is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors.nome).to.exist;
-//                 done();
-//             }
-//         })();
-//     });
+    it('it should be an invalid user [invalid field - telefone.ddd]', async () => {
+      const user = new UserSchema(mockUser.userWithInvalidTelefoneDDD);
+      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidTelefoneDDD.telefones[0].ddd} não é um número de ddd válido`);
+    });
 
-//     it('it should be an invalid user [missing field - senha]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.userWithoutSenha);
-//                 await user.validate();
-//                 done(new Error('Validate UserSchema senha is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors.senha).to.exist;
-//                 done();
-//             }
-//         })();
+    it('it should be an invalid user [missing field - email]', async () => {
+      const user = new UserSchema(mockUser.userWithoutEmail);
+      await expect(user.validate()).rejects.toThrow('email é um campo obrigatório');
+    });
 
-//     });
+    it('it should be an invalid user [missing field - nome]', async () => {
+      const user = new UserSchema(mockUser.userWithoutNome);
+      await expect(user.validate()).rejects.toThrow('nome é um campo obrigatório');
+    });
 
-//     it('it should be an invalid user [duplicated field - email]', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.user);
-//                 await user.save();
+    it('it should be an invalid user [missing field - senha]', async () => {
+      const user = new UserSchema(mockUser.userWithoutSenha);
+      await expect(user.validate()).rejects.toThrow('senha é um campo obrigatório');
+    });
+  });
 
-//                 let anotherUser = new UserSchema(mock.user);
-//                 await anotherUser.save();
-//                 done(new Error('Validate UserSchema unique email is not working properly'));
-//             } catch (error) {
-//                 chai.expect(error.errors.email).to.exist;
-//                 done();
-//             }
-//         })();
-//     });
+  describe('Password validation ', () => {
+    it('it should match password', async () => {
+      const user = new UserSchema(mockUser.user);
+      await user.save();
 
-// });
+      const validPassword = await user.comparePassword(mockUser.user.senha);
 
-// describe('User - Schema password validation', () => {
-//     beforeEach(async () => {
-//         await UserSchema.remove({});
-//     });
+      expect(validPassword).toBeTruthy();
+    });
 
-//     it('it should match password', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.user);
-//                 await user.save();
+    it('it should not match password', async () => {
+      await UserSchema.deleteOne({ email: mockUser.user.email });
 
-//                 let validPassword = await user.comparePassword(mock.user.senha);
-//                 chai.expect(validPassword).to.be.a('boolean');
-//                 chai.expect(validPassword).to.be.true;
-//                 done();
-//             } catch (error) {
-//                 done(error);
-//             }
-//         })();
-//     });
+      const user = new UserSchema(mockUser.user);
+      await user.save();
 
-//     it('it should not match password', (done) => {
-//         (async () => {
-//             try {
-//                 let user = new UserSchema(mock.user);
-//                 await user.save();
+      const invalidPassword = await user.comparePassword('invalid password');
 
-//                 let validPassword = await user.comparePassword('not match');
-//                 chai.expect(validPassword).to.be.a('boolean');
-//                 chai.expect(validPassword).to.be.false;
-//                 done();
-//             } catch (error) {
-//                 done(error);
-//             }
-//         })();
-//     });
-
-// });
+      expect(invalidPassword).not.toBeTruthy();
+    });
+  });
+});

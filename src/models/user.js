@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
 const validators = require('mongoose-validators');
 const unique = require('mongoose-unique-validator');
@@ -6,7 +8,7 @@ const jwtFunctions = require('../jwt/functions');
 
 const { Schema } = mongoose;
 
-const { SALT } = process.env;
+const SALT = 10;
 
 const TelefoneSchema = new Schema({
   numero: {
@@ -39,9 +41,7 @@ const UserSchema = new Schema({
 
 UserSchema.plugin(unique, { message: '{PATH} já existente' });
 
-
 UserSchema.pre('save', async function (next) {
-
   try {
     this.ultimo_login = this.updatedAt;
 
@@ -49,7 +49,7 @@ UserSchema.pre('save', async function (next) {
 
     if (!this.isModified('senha')) return next();
 
-    const currentSalt = await bcrypt.genSalt(parseInt(SALT));
+    const currentSalt = await bcrypt.genSalt(SALT);
 
     const hash = await bcrypt.hash(this.senha, currentSalt);
 
@@ -57,7 +57,7 @@ UserSchema.pre('save', async function (next) {
 
     next();
   } catch (error) {
-    return next(error);
+    next(error);
   }
 });
 
