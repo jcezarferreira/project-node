@@ -1,5 +1,11 @@
 Desafio Concrete
 ====================
+# URL
+Endpoint: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev
+Sign in: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/signin
+Criação de cadastro (Sign UP): https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev
+Buscar usuário: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/user/:id
+
 # Baixar dependencias
 No terminal pode executar o comando: <br/>
 <b>npm install</b>
@@ -30,9 +36,3 @@ Para validar com o coverage, pode executar: <br/>
 
 No terminal pode executar o comando: <br/>
 <b>* serverless deploy</b><br/> 
-
-#URL
-Endpoint: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev
-Sign in: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/signin
-Criação de cadastro (Sign UP): https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev
-Buscar usuário: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/user/:id
