@@ -14,7 +14,7 @@ plugins:
 
 functions:
   app:
-    handler: src/app.server
+    handler: index.server
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
