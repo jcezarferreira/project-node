@@ -1,4 +1,5 @@
-require('dotenv').config();
+const serverless = require('serverless-http');
+const uuidv1 = require('uuid/v1');
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -23,4 +24,11 @@ app.use(passport.session());
 
 jwtFunctions.setPassportStrategy(passport);
 
-module.exports = app;
+module.exports.server = serverless(app, {
+  request: (request, event) => {
+    request.context = event.requestContext;
+    request.id = uuidv1();
+  },
+});
+
+module.exports.app = app;

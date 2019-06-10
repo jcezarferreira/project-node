@@ -1,7 +1,7 @@
 require('jest');
 require('dotenv').config();
 const request = require('supertest');
-const app = require('../../src/app');
+const { app } = require('../../src/app');
 const UserSchema = require('../../src/models/user');
 const mockUser = require('../mocks/mock-user');
 const mockCredentials = require('../mocks/mock-credentials');
@@ -45,61 +45,61 @@ describe('User Controller', () => {
         });
     });
 
-    // it('it should not signup the user [invalid telefones.numero]', (done) => {
-    //   const user = mockUser.userWithInvalidTelefoneNumero;
-    //   request(app)
-    //     .post('/signup')
-    //     .send(user)
-    //     .end((err, response) => {
-    //       expect(response.status).toBe(400);
-    //       expect(response.body.message).not.toBeNull();
-    //       expect(response.body.message)
-    //         .toEqual(`${user.telefones[0].numero} não é um número de telefone válido`);
-    //       done();
-    //     });
-    // });
+    it('it should not signup the user [invalid telefones.numero]', (done) => {
+      const user = mockUser.userWithInvalidTelefoneNumero;
+      request(app)
+        .post('/signup')
+        .send(user)
+        .end((err, response) => {
+          expect(response.status).toBe(400);
+          expect(response.body.message).not.toBeNull();
+          expect(response.body.message)
+            .toEqual(`${user.telefones[0].numero} não é um número de telefone válido`);
+          done();
+        });
+    });
 
-    // it('it should not signup the user [invalid telefones.ddd]', (done) => {
-    //   const user = mockUser.userWithInvalidTelefoneDDD;
-    //   request(app)
-    //     .post('/signup')
-    //     .send(user)
-    //     .end((err, response) => {
-    //       expect(response.status).toBe(400);
-    //       expect(response.body.message).not.toBeNull();
-    //       expect(response.body.message)
-    //         .toEqual(`${user.telefones[0].ddd} não é um número de ddd válido`);
-    //       done();
-    //     });
-    // });
+    it('it should not signup the user [invalid telefones.ddd]', (done) => {
+      const user = mockUser.userWithInvalidTelefoneDDD;
+      request(app)
+        .post('/signup')
+        .send(user)
+        .end((err, response) => {
+          expect(response.status).toBe(400);
+          expect(response.body.message).not.toBeNull();
+          expect(response.body.message)
+            .toEqual(`${user.telefones[0].ddd} não é um número de ddd válido`);
+          done();
+        });
+    });
 
-    // it('it should not signup the user [invalid nome]', (done) => {
-    //   const user = mockUser.userWithoutNome;
-    //   request(app)
-    //     .post('/signup')
-    //     .send(user)
-    //     .end((err, response) => {
-    //       expect(response.status).toBe(400);
-    //       expect(response.body.message).not.toBeNull();
-    //       expect(response.body.message)
-    //         .toEqual('nome é um campo obrigatório');
-    //       done();
-    //     });
-    // });
+    it('it should not signup the user [invalid nome]', (done) => {
+      const user = mockUser.userWithoutNome;
+      request(app)
+        .post('/signup')
+        .send(user)
+        .end((err, response) => {
+          expect(response.status).toBe(400);
+          expect(response.body.message).not.toBeNull();
+          expect(response.body.message)
+            .toEqual('nome é um campo obrigatório');
+          done();
+        });
+    });
 
-    // it('it should not signup the user [missing senha]', (done) => {
-    //   const user = mockUser.userWithoutSenha;
-    //   request(app)
-    //     .post('/signup')
-    //     .send(user)
-    //     .end((err, response) => {
-    //       expect(response.status).toBe(400);
-    //       expect(response.body.message).not.toBeNull();
-    //       expect(response.body.message)
-    //         .toEqual('senha é um campo obrigatório');
-    //       done();
-    //     });
-    // });
+    it('it should not signup the user [missing senha]', (done) => {
+      const user = mockUser.userWithoutSenha;
+      request(app)
+        .post('/signup')
+        .send(user)
+        .end((err, response) => {
+          expect(response.status).toBe(400);
+          expect(response.body.message).not.toBeNull();
+          expect(response.body.message)
+            .toEqual('senha é um campo obrigatório');
+          done();
+        });
+    });
 
     it('it should not signup the user [duplicated email]', (done) => {
       (async () => {
