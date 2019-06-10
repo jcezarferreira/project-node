@@ -1,10 +1,10 @@
 Desafio Concrete
 ====================
 # URL
-Endpoint: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev
-Sign in: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/signin
-Criação de cadastro (Sign UP): https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev
-Buscar usuário: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/user/:id
+Endpoint: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev<br/>
+Sign in: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/signin<br/>
+Criação de cadastro (Sign UP): https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev<br/>
+Buscar usuário: https://42flr6f0ph.execute-api.us-east-1.amazonaws.com/dev/user/:id<br/>
 
 # Baixar dependencias
 No terminal pode executar o comando: <br/>
