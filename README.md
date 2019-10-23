@@ -31,9 +31,6 @@ Esta rota é para consultar um usuário por id
 <strong>Esta rota requer autenticação no cabeçalho, Bearer com o token fornecido no 'signin'</strong>
 
 
-
-# Baixar dependências
-
 # Variaveis de ambiente
 ```PORT= 3000```<br>
 ```JWT_SECRET=pitangsecret```<br>
