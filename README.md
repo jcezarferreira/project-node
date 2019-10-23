@@ -2,7 +2,7 @@ Projeto Exemplo NodeJS
 ====================
 # Informações adicionais
 
-- Stack:
+- Stack:<br>
  ```Node: ^v10.6```<br>
  ```Express: ^4.17 ```<br>
  ```Mongoose: ^5.5```<br>
