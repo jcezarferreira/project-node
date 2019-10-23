@@ -3,14 +3,14 @@ Projeto Exemplo NodeJS
 # Informações adicionais
 
 - Stack:
- Node: ^v10.6
- Express: ^4.17 
- Mongoose: ^5.5
- Serverless: ^1.44
- Serverless Http: ^2.0.2
- Husky: ^2.4
- Eslint: ^5.16
- Jest: ^24.8
+ ```Node: ^v10.6```<br>
+ ```Express: ^4.17 ```<br>
+ ```Mongoose: ^5.5```<br>
+ ```Serverless: ^1.44```<br>
+ ```Serverless Http: ^2.0.2```<br>
+ ```Husky: ^2.4```<br>
+ ```Eslint: ^5.16```<br>
+ ```Jest: ^24.8```<br>
 
 # Rotas
 ```GET - /online```
