@@ -35,7 +35,7 @@ Esta rota é para consultar um usuário por id
 ```PORT= 3000```<br>
 ```JWT_SECRET=pitangsecret```<br>
 ```JWT_EXPIRATION_TIME=1m```<br>
-```MONGO_URL=mongodb://padmin:Pit@ng01@ds137498.mlab.com:37498/example-project```<br>
+```MONGO_URL=mongodb://admin:Pit%40ng01@ds137498.mlab.com:37498/example-project```<br>
 
 
 # Executar os testes
