@@ -1,6 +1,6 @@
 module.exports.credentials = {
   email: 'julio@ferreira.com',
-  senha: '123456',
+  password: '123456',
 };
 
 module.exports.credentialsWithNotRegisteredEmail = {
@@ -8,15 +8,15 @@ module.exports.credentialsWithNotRegisteredEmail = {
   senha: '123456',
 };
 
-module.exports.credentialsWithNotRegisteredSenha = {
+module.exports.credentialsWithNotRegisteredPassword = {
   email: 'julio@ferreira.com',
-  senha: '123',
+  password: '123',
 };
 
 module.exports.credentialsWithoutEmail = {
-  senha: '123456',
+  password: '123456',
 };
 
-module.exports.credentialsWithoutSenha = {
+module.exports.credentialsWithoutPassword = {
   email: 'julio@ferreira.com',
 };

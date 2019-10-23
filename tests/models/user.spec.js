@@ -34,14 +34,14 @@ describe('User Schema', () => {
       await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidEmail.email} não é um email válido`);
     });
 
-    it('it should be an invalid user [invalid field - telefone.numero]', async () => {
-      const user = new UserSchema(mockUser.userWithInvalidTelefoneNumero);
-      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidTelefoneNumero.telefones[0].numero} não é um número de telefone válido`);
+    it('it should be an invalid user [invalid field - phone.phoneNumber]', async () => {
+      const user = new UserSchema(mockUser.userWithInvalidPhoneNumber);
+      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidPhoneNumber.phones[0].phoneNumber} não é um número de telefone válido`);
     });
 
-    it('it should be an invalid user [invalid field - telefone.ddd]', async () => {
-      const user = new UserSchema(mockUser.userWithInvalidTelefoneDDD);
-      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidTelefoneDDD.telefones[0].ddd} não é um número de ddd válido`);
+    it('it should be an invalid user [invalid field - phone.ddd]', async () => {
+      const user = new UserSchema(mockUser.userWithInvalidPhoneDDD);
+      await expect(user.validate()).rejects.toThrow(`${mockUser.userWithInvalidPhoneDDD.phones[0].ddd} não é um número de ddd válido`);
     });
 
     it('it should be an invalid user [missing field - email]', async () => {
@@ -49,14 +49,14 @@ describe('User Schema', () => {
       await expect(user.validate()).rejects.toThrow('email é um campo obrigatório');
     });
 
-    it('it should be an invalid user [missing field - nome]', async () => {
-      const user = new UserSchema(mockUser.userWithoutNome);
-      await expect(user.validate()).rejects.toThrow('nome é um campo obrigatório');
+    it('it should be an invalid user [missing field - name]', async () => {
+      const user = new UserSchema(mockUser.userWithoutName);
+      await expect(user.validate()).rejects.toThrow('name é um campo obrigatório');
     });
 
-    it('it should be an invalid user [missing field - senha]', async () => {
-      const user = new UserSchema(mockUser.userWithoutSenha);
-      await expect(user.validate()).rejects.toThrow('senha é um campo obrigatório');
+    it('it should be an invalid user [missing field - password]', async () => {
+      const user = new UserSchema(mockUser.userWithoutPassword);
+      await expect(user.validate()).rejects.toThrow('password é um campo obrigatório');
     });
   });
 
@@ -65,7 +65,7 @@ describe('User Schema', () => {
       const user = new UserSchema(mockUser.user);
       await user.save();
 
-      const validPassword = await user.comparePassword(mockUser.user.senha);
+      const validPassword = await user.comparePassword(mockUser.user.password);
 
       expect(validPassword).toBeTruthy();
     });

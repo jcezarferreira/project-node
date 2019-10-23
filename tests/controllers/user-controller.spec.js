@@ -10,16 +10,21 @@ const connection = require('../../src/config/connection');
 process.env.NODE_ENV = 'test';
 
 describe('User Controller', () => {
-  describe('SignUp', () => {
-    beforeEach(async () => {
+  describe('User - /POST signup', () => {
+    beforeAll(async () => {
       await connection.generate();
+    });
+
+    beforeEach(async () => {
       await UserSchema.deleteMany({});
+      const user = new UserSchema(mockUser.anotherUser);
+      await user.save();
     });
 
     it('it should signup the user', (done) => {
-      const user = mockUser.anotherUser;
+      const { user } = mockUser;
       request(app)
-        .post('/signup')
+        .post('/user/signup')
         .send(user)
         .end((err, response) => {
           expect(response.status).toBe(200);
@@ -35,7 +40,7 @@ describe('User Controller', () => {
     it('it should not signup the user [invalid email]', (done) => {
       const user = mockUser.userWithInvalidEmail;
       request(app)
-        .post('/signup')
+        .post('/user/signup')
         .send(user)
         .end((err, response) => {
           expect(response.status).toBe(400);
@@ -45,80 +50,79 @@ describe('User Controller', () => {
         });
     });
 
-    it('it should not signup the user [invalid telefones.numero]', (done) => {
-      const user = mockUser.userWithInvalidTelefoneNumero;
+    it('it should not signup the user [invalid phones.numero]', (done) => {
+      const user = mockUser.userWithInvalidPhoneNumber;
       request(app)
-        .post('/signup')
+        .post('/user/signup')
         .send(user)
         .end((err, response) => {
           expect(response.status).toBe(400);
           expect(response.body.message).not.toBeNull();
           expect(response.body.message)
-            .toEqual(`${user.telefones[0].numero} não é um número de telefone válido`);
+            .toEqual(`${user.phones[0].phoneNumber} não é um número de telefone válido`);
           done();
         });
     });
 
-    it('it should not signup the user [invalid telefones.ddd]', (done) => {
-      const user = mockUser.userWithInvalidTelefoneDDD;
+    it('it should not signup the user [invalid phones.ddd]', (done) => {
+      const user = mockUser.userWithInvalidPhoneDDD;
       request(app)
-        .post('/signup')
+        .post('/user/signup')
         .send(user)
         .end((err, response) => {
           expect(response.status).toBe(400);
           expect(response.body.message).not.toBeNull();
           expect(response.body.message)
-            .toEqual(`${user.telefones[0].ddd} não é um número de ddd válido`);
+            .toEqual(`${user.phones[0].ddd} não é um número de ddd válido`);
           done();
         });
     });
 
-    it('it should not signup the user [invalid nome]', (done) => {
-      const user = mockUser.userWithoutNome;
+    it('it should not signup the user [invalid name]', (done) => {
+      const user = mockUser.userWithoutName;
       request(app)
-        .post('/signup')
+        .post('/user/signup')
         .send(user)
         .end((err, response) => {
           expect(response.status).toBe(400);
           expect(response.body.message).not.toBeNull();
           expect(response.body.message)
-            .toEqual('nome é um campo obrigatório');
+            .toEqual('name é um campo obrigatório');
           done();
         });
     });
 
-    it('it should not signup the user [missing senha]', (done) => {
-      const user = mockUser.userWithoutSenha;
+    it('it should not signup the user [missing password]', (done) => {
+      const user = mockUser.userWithoutPassword;
       request(app)
-        .post('/signup')
+        .post('/user/signup')
         .send(user)
         .end((err, response) => {
           expect(response.status).toBe(400);
           expect(response.body.message).not.toBeNull();
           expect(response.body.message)
-            .toEqual('senha é um campo obrigatório');
+            .toEqual('password é um campo obrigatório');
           done();
         });
     });
 
     it('it should not signup the user [duplicated email]', (done) => {
       (async () => {
-        const user = new UserSchema(mockUser.anotherUser);
-        await user.save();
         request(app)
-          .post('/signup')
+          .post('/user/signup')
           .send(mockUser.anotherUser)
           .end((err, response) => {
             expect(response.status).toBe(409);
             expect(response.body.message).not.toBeNull();
-            expect(response.body.message).toEqual('E-mail já existente');
+            expect(response.body.message)
+              .toEqual('informação já existente');
             done();
           });
       })();
     });
   });
 
-  describe('SignIn', () => {
+  describe('User - /POST signin', () => {
     beforeAll(async () => {
       await connection.generate();
     });
@@ -131,7 +135,7 @@ describe('User Controller', () => {
     it('it should signin the user', (done) => {
       const { credentials } = mockCredentials;
       request(app)
-        .post('/signin')
+        .post('/user/signin')
         .send(credentials)
         .end((err, response) => {
           expect(response.status).toBe(200);
@@ -147,7 +151,7 @@ describe('User Controller', () => {
     it('it should not signin the user [email not registered]', (done) => {
       const credentials = mockCredentials.credentialsWithNotRegisteredEmail;
       request(app)
-        .post('/signin')
+        .post('/user/signin')
         .send(credentials)
         .end((err, response) => {
           expect(response.status).toBe(401);
@@ -157,10 +161,10 @@ describe('User Controller', () => {
         });
     });
 
-    it('it should not signin the user [senha not registered]', (done) => {
-      const credentials = mockCredentials.credentialsWithNotRegisteredSenha;
+    it('it should not signin the user [password not registered]', (done) => {
+      const credentials = mockCredentials.credentialsWithNotRegisteredPassword;
       request(app)
-        .post('/signin')
+        .post('/user/signin')
         .send(credentials)
         .end((err, response) => {
           expect(response.status).toBe(401);
@@ -173,7 +177,7 @@ describe('User Controller', () => {
     it('it should not signin the user [missing email]', (done) => {
       const credentials = mockCredentials.credentialsWithoutEmail;
       request(app)
-        .post('/signin')
+        .post('/user/signin')
         .send(credentials)
         .end((err, response) => {
           expect(response.status).toBe(401);
@@ -183,10 +187,10 @@ describe('User Controller', () => {
         });
     });
 
-    it('it should not signin the user [missing senha]', (done) => {
-      const credentials = mockCredentials.credentialsWithoutSenha;
+    it('it should not signin the user [missing password]', (done) => {
+      const credentials = mockCredentials.credentialsWithoutPassword;
       request(app)
-        .post('/signin')
+        .post('/user/signin')
         .send(credentials)
         .end((err, response) => {
           expect(response.status).toBe(401);
@@ -225,36 +229,6 @@ describe('User Controller', () => {
           expect(response.body.message).not.toBeNull();
           done();
         });
-    });
-
-    it('it should not get the user [different user identifier]', (done) => {
-      (async () => {
-        let user = new UserSchema(mockUser.anotherUser);
-        user = await user.save();
-        request(app)
-          .get(`/user/${user.id}`)
-          .set('Authorization', `bearer ${savedUser.token}`)
-          .end((err, response) => {
-            expect(response.status).toBe(401);
-            expect(response.body.message).not.toBeNull();
-            done();
-          });
-      })();
-    });
-
-    it('it should not get the user [different user token]', (done) => {
-      (async () => {
-        let user = new UserSchema(mockUser.anotherUser);
-        user = await user.save();
-        request(app)
-          .get(`/user/${user.id}`)
-          .set('Authorization', `bearer ${savedUser.token}`)
-          .end((err, response) => {
-            expect(response.status).toBe(401);
-            expect(response.body.message).not.toBeNull();
-            done();
-          });
-      })();
     });
 
     it('it should not get the user [missing Authorization token]', (done) => {

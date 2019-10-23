@@ -1,25 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const passport = require('passport');
+const cors = require('cors');
+
+const createConnection = require('./middleware/create-connection');
+const notFound = require('./middleware/not-found');
+const serverError = require('./middleware/server-error');
+
+const { configuration } = require('./config/jwt-configuration');
 
 const app = express();
-const router = express.Router();
 
-const handlers = require('./config/middleware');
-const routes = require('./routes');
-const jwtFunctions = require('./jwt/functions');
-
-routes(router);
+const routes = require('./routes/index');
 
 app.use(bodyParser.json());
-app.use(handlers.enableCors);
-app.use(handlers.createConnection);
-app.use('/', router);
-app.use(handlers.notFound);
-app.use(handlers.serverError);
-app.use(passport.initialize());
-app.use(passport.session());
-
-jwtFunctions.setPassportStrategy(passport);
+app.use(cors());
+app.use(createConnection);
+app.use('/', configuration.unless({ path: ['/online', '/user/signin', '/user/signup'] }), routes);
+app.use(notFound);
+app.use(serverError);
 
 module.exports.app = app;

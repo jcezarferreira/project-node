@@ -4,14 +4,14 @@ const mongoose = require('mongoose');
 const validators = require('mongoose-validators');
 const unique = require('mongoose-unique-validator');
 const crypto = require('crypto');
-const jwtFunctions = require('../jwt/functions');
+const { getToken } = require('../config/jwt-configuration');
 
 const { Schema } = mongoose;
 
 const SALT = 16;
 
-const TelefoneSchema = new Schema({
-  numero: {
+const PhoneSchema = new Schema({
+  phoneNumber: {
     type: String,
     validate: [
       validators.isNumeric({ message: '{VALUE} não é um número de telefone válido' }),
@@ -26,16 +26,16 @@ const TelefoneSchema = new Schema({
 });
 
 const UserSchema = new Schema({
-  nome: { type: String, required: [true, '{PATH} é um campo obrigatório'] },
+  name: { type: String, required: [true, '{PATH} é um campo obrigatório'] },
   email: {
     type: String,
     unique: true,
     required: [true, '{PATH} é um campo obrigatório'],
     validate: validators.isEmail({ message: '{VALUE} não é um {PATH} válido' }),
   },
-  senha: { type: String, required: [true, '{PATH} é um campo obrigatório'] },
-  telefones: [TelefoneSchema],
-  ultimo_login: Date,
+  password: { type: String, required: [true, '{PATH} é um campo obrigatório'] },
+  phones: [PhoneSchema],
+  lastLogin: Date,
   salt: String,
   token: String,
 }, { timestamps: true });
@@ -44,17 +44,17 @@ UserSchema.plugin(unique, { message: '{PATH} já existente' });
 
 UserSchema.pre('save', function (next) {
   try {
-    this.ultimo_login = this.updatedAt;
+    this.lastLogin = this.updatedAt;
 
-    this.token = jwtFunctions.getToken(this);
+    this.token = getToken(this);
 
-    if (!this.isModified('senha')) return next();
+    if (!this.isModified('password')) return next();
 
     this.salt = crypto.randomBytes(SALT).toString('hex');
 
-    const hash = crypto.pbkdf2Sync(this.senha, this.salt, 10000, 512, 'sha512').toString('hex');
+    const hash = crypto.pbkdf2Sync(this.password, this.salt, 10000, 512, 'sha512').toString('hex');
 
-    this.senha = hash;
+    this.password = hash;
 
     next();
   } catch (error) {
@@ -64,7 +64,7 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.methods.comparePassword = function (candidatePassword) {
   const hash = crypto.pbkdf2Sync(candidatePassword || '', this.salt, 10000, 512, 'sha512').toString('hex');
-  return this.senha === hash;
+  return this.password === hash;
 };
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema);
