@@ -4,10 +4,10 @@ provider:
   name: aws
   runtime: nodejs8.10
   environment:
-    SALT: 10
-    JWT_SECRET: 'pitangsecret' 
-    JWT_EXPIRATION_TIME: '30m'
-    MONGO_URL: mongodb://admin:Pit%40ng01@ds137498.mlab.com:37498/example-project
+    SALT: <SALT>
+    JWT_SECRET: <secret>
+    JWT_EXPIRATION_TIME: < exp - time >
+    MONGO_URL: <string - connection>
 
 plugins:
   - serverless-offline

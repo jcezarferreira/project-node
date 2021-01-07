@@ -32,10 +32,10 @@ Esta rota é para consultar um usuário por id
 
 
 # Variaveis de ambiente
-```PORT= 3000```<br>
-```JWT_SECRET=pitangsecret```<br>
-```JWT_EXPIRATION_TIME=1m```<br>
-```MONGO_URL=mongodb://admin:Pit%40ng01@ds137498.mlab.com:37498/example-project```<br>
+```PORT= <PORT>```<br>
+```JWT_SECRET=<secret>```<br>
+```JWT_EXPIRATION_TIME=<exp-time>```<br>
+```MONGO_URL=<connection-string>```<br>
 
 
 # Executar os testes
